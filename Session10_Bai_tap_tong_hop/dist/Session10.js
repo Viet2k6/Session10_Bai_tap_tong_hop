@@ -122,6 +122,17 @@ class AirlineManager {
             .getAll()
             .reduce((totalRevenue, booking) => totalRevenue + booking.totalCost, 0);
     }
+    countFlightsByType() {
+        return this.flightRepository.getAll().reduce((counts, flight) => {
+            if (flight instanceof DomesticFlight) {
+                counts.domestic++;
+            }
+            else if (flight instanceof InternationalFlight) {
+                counts.international++;
+            }
+            return counts;
+        }, { domestic: 0, international: 0 });
+    }
 }
 const manager = new AirlineManager();
 const printMenu = () => {
@@ -135,6 +146,7 @@ const printMenu = () => {
 5. Hiển thị danh sách chuyến bay còn trống
 6. Hiển thị danh sách vé đã đặt của một hành khách
 7. Tính tổng doanh thu của hãng
+8. Đếm số lượng chuyến bay nội địa/quốc tế
 11. Thoát chương trình
 Nhập lựa chọn của bạn:`);
         const choice = Number(choiceInput);
@@ -248,6 +260,11 @@ const main = () => {
             case 7: {
                 const revenue = manager.calculateTotalRevenue();
                 alert(`Tổng doanh thu của hãng: ${revenue}`);
+                break;
+            }
+            case 8: {
+                const counts = manager.countFlightsByType();
+                alert(`Số lượng chuyến bay:\nNội địa: ${counts.domestic}\nQuốc tế: ${counts.international}`);
                 break;
             }
             case 11: {
